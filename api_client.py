@@ -1,13 +1,15 @@
 import requests
-import getpass
 import json
 import config
 
 class FundAPIClient:
-    def __init__(self, base_url, username, password=None):
+    def __init__(self, base_url, username):
+        if not config.API_PASSWORD or "YOUR_" in config.API_PASSWORD:
+            raise ValueError("API Password is not configured in `secrets.py`.")
+
         self.base_url = base_url
         self.username = username
-        self.password = password or getpass.getpass(f"Enter API password for user '{username}': ")
+        self.password = config.API_PASSWORD
         self.auth = (self.username, self.password)
 
     def _make_request(self, method, endpoint, data=None):

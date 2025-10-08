@@ -18,11 +18,11 @@ def extract_fund_details_with_llm(email_body):
     openai.api_key = config.OPENAI_API_KEY
 
     # This is the prompt that will be sent to the LLM. It includes instructions
-    # on what to extract and in what format. The format is based on the
-    # fields in the React UI provided in the problem description.
+    # on what to extract and in what format.
     prompt = f"""
     From the following email body, extract the fund setup information.
-    The output should be a JSON object with the following keys. If a value is not present, use null.
+    Your response MUST be a single, valid JSON object and nothing else. Do not include any explanatory text before or after the JSON.
+    The JSON object should have the following keys. If a value is not present in the email, use a JSON null value.
     - fundID (string)
     - fundName (string)
     - fundTicker (string)
@@ -50,23 +50,25 @@ def extract_fund_details_with_llm(email_body):
     ---
     {email_body}
     ---
-
-    JSON Output:
     """
 
     try:
         response = openai.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "You are an intelligent assistant that extracts financial data from text and returns it as JSON."},
+                {"role": "system", "content": "You are an intelligent assistant that extracts financial data from text. You must return the data as a single, valid JSON object and nothing else."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.0, # Lower temperature for more deterministic output
-            response_format={"type": "json_object"}
         )
 
         # The response from the API is a JSON string in the content of the message.
         extracted_json_str = response.choices[0].message.content
+
+        # The model might still return the JSON wrapped in markdown, so we clean it.
+        if extracted_json_str.strip().startswith("```json"):
+            extracted_json_str = extracted_json_str.strip()[7:-4]
+
         fund_details = json.loads(extracted_json_str)
         return fund_details
 

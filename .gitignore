@@ -1,0 +1,15 @@
+# Secrets
+secrets.py
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# Processed data files
+*.json
