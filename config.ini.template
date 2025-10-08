@@ -1,0 +1,15 @@
+[API]
+# Credentials for the backend API
+username = your_api_username
+password = ; Leave blank to be prompted securely at runtime
+
+[LLM]
+# Your OpenAI API key
+api_key = YOUR_OPENAI_API_KEY
+
+[Email]
+# Your Gmail SMTP details
+username = sangharshsingh@gmail.com
+password = ; Leave blank to be prompted securely at runtime
+to_address = ssingh9@gmail.com
+from_address = sangharshsingh@gmail.com

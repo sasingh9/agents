@@ -1,0 +1,9 @@
+# Ignore the actual config file with secrets
+config.ini
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore state file
+processed_exceptions.json
